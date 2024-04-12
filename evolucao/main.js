@@ -1,45 +1,27 @@
-const nomePokemon = location.search
+const nomePokemon = new URLSearchParams(document.location.search).get("evolucao");
 const nomePagina = document.querySelector('title');
 const h1Pagina = document.getElementById('nome-do-pokemon');
 const imagemPokemon = document.getElementById('imagem-do-pokemon');
+const botao = document.getElementById('botao');
+let x = 0;
 
+nomePagina.textContent = `Página do ${nomePokemon}`
+h1Pagina.textContent = `Informações sobre o ${nomePokemon}`
 
-nomePagina.textContent = `Página do ${nomePokemon}`;
+// ------------------ API PAGE INTERACTIONS -----------------------
+fetch(`https://pokeapi.co/api/v2/pokemon/${nomePokemon}`)
+    .then(response => response.json())
+    .then(data => {
+        const imagens = [data.sprites.front_default, data.sprites.front_shiny,
+        data.sprites.back_default, data.sprites.back_shiny];
+        imagemPokemon.src = imagens[x];
 
-if (nomePokemon == '?evolucao=squirtle') {
-    nomePagina.textContent = `Página do Squirtle`;
-    h1Pagina.textContent = `Informações sobre o Squirtle`;
-
-    fetch("https://pokeapi.co/api/v2/pokemon/squirtle")
-        .then(response => response.json())
-        .then(data => {
-            const imageUrl = data.sprites.front_default;
-            imagemPokemon.src = imageUrl;
-        })
-
-} else
-
-    if (nomePokemon == '?evolucao=wartortle') {
-        nomePagina.textContent = `Página do Wartortle`;
-        h1Pagina.textContent = `Informações sobre o Wartortle`;
-
-        fetch("https://pokeapi.co/api/v2/pokemon/wartortle")
-            .then(response => response.json())
-            .then(data => {
-                const imageUrl = data.sprites.front_default;
-                imagemPokemon.src = imageUrl;
-            })
-    } else
-
-        if (nomePokemon == '?evolucao=blastoise') {
-            nomePagina.textContent = `Página do Blastoise`;
-            h1Pagina.textContent = `Informações sobre o Blastoise`;
-
-            fetch("https://pokeapi.co/api/v2/pokemon/blastoise")
-                .then(response => response.json())
-                .then(data => {
-                    const imageUrl = data.sprites.front_default;
-                    imagemPokemon.src = imageUrl;
-                })
+        botao.onclick = function () {
+            if (x >= 3) {
+                x = 0;
+            } else {
+                x++
+            }
+            imagemPokemon.src = imagens[x];
         }
-
+    })
