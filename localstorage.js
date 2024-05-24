@@ -32,18 +32,27 @@ let texto = document.getElementById("updates")
 
 texto.textContent = `Esta página foi visitada ${numeroContador} vezes. A última visita foi: ${lastVisit}`
 
+
 //================= TO-DO LIST =========================
 function adicionarTarefa(textoTarefa, textoDescricao) {
 
+    const taskID = new Date().getTime();
     var borda = document.createElement('div');
     borda.className = "tarefas";
     var listText = document.createElement('h2');
     var listDescription = document.createElement('p');
+    var btn = document.createElement('button');
+    btn.className = "editButton"
+    btn.id = "editButton"
+    btn.setAttribute("title", "Editar tarefa");
     listText.textContent = textoTarefa;
     listDescription.textContent = textoDescricao;
 
+    borda.id = taskID;
+    borda.appendChild(btn);
     borda.appendChild(listText);
     borda.appendChild(listDescription);
+
 
     var todoList = document.getElementById('todo-list');
     todoList.appendChild(borda);
@@ -90,6 +99,34 @@ document.getElementById('todo-form').addEventListener('submit', function (event)
     }
 });
 
+//========== adicionar dialog para editar as tarefas =============
 document.addEventListener('DOMContentLoaded', function () {
     carregarTarefas();
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('editButton')) {
+
+            var tarefaElement = event.target.parentNode;
+            var textoTarefa = tarefaElement.querySelector('h2').textContent;
+            var textoDescricao = tarefaElement.querySelector('p').textContent;
+
+            // Abre o diálogo
+            var dialog = document.getElementById('editDialog');
+            dialog.querySelector('#editTitulo').value = textoTarefa;
+            dialog.querySelector('#editDescricao').value = textoDescricao;
+            dialog.showModal();
+        }
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function () {
+        var dialog = document.getElementById('editDialog');
+        dialog.close();
+    });
 });
+
+
+function salvarEdicao() {
+    // Edição da Tarefa ... 
+    var dialog = document.getElementById('editDialog');
+    dialog.close();
+}
